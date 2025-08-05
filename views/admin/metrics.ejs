@@ -1,0 +1,168 @@
+<% layout('../layout') -%>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-8 flex items-center gap-4">
+        <a href="/" class="p-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </a>
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold text-gray-900">Admin Metrics</h1>
+            <p class="text-gray-600">Platform KPI dashboard</p>
+        </div>
+        <div class="flex items-center gap-2">
+            <label for="date-filter" class="text-sm font-medium text-gray-700">Since:</label>
+            <form method="GET" action="/admin/metrics" class="flex items-center gap-2">
+                <input
+                    id="date-filter"
+                    name="since"
+                    type="date"
+                    value="<%= since %>"
+                    class="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                <button
+                    type="submit"
+                    class="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                    Filter
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-blue-100">
+                    <svg class="h-4 w-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <span class="text-sm text-gray-600">Bursts</span>
+            </div>
+            <div class="text-2xl font-bold"><%= metrics.bursts.toLocaleString() %></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-green-100">
+                    <svg class="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm text-gray-600">Wins</span>
+            </div>
+            <div class="text-2xl font-bold"><%= metrics.wins.toLocaleString() %></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-purple-100">
+                    <svg class="h-4 w-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm text-gray-600">Purchases</span>
+            </div>
+            <div class="text-2xl font-bold"><%= metrics.purchases.toLocaleString() %></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-orange-100">
+                    <svg class="h-4 w-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
+                    </svg>
+                </div>
+                <span class="text-sm text-gray-600">Redemptions</span>
+            </div>
+            <div class="text-2xl font-bold"><%= metrics.redemptions.toLocaleString() %></div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 rounded-lg bg-pink-100">
+                    <svg class="h-4 w-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                    </svg>
+                </div>
+                <span class="text-sm text-gray-600">Referrals</span>
+            </div>
+            <div class="text-2xl font-bold"><%= metrics.referrals.toLocaleString() %></div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Trends Over Time</h2>
+        <p class="text-gray-600 mb-6">Platform activity metrics visualization</p>
+        <div class="h-80">
+            <canvas id="metricsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+const ctx = document.getElementById('metricsChart').getContext('2d');
+const chartData = <%- JSON.stringify(metrics.chartData) %>;
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: chartData.map(d => d.date),
+        datasets: [
+            {
+                label: 'Bursts',
+                data: chartData.map(d => d.bursts),
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                tension: 0.4
+            },
+            {
+                label: 'Wins',
+                data: chartData.map(d => d.wins),
+                borderColor: '#16a34a',
+                backgroundColor: 'rgba(22, 163, 74, 0.1)',
+                tension: 0.4
+            },
+            {
+                label: 'Purchases',
+                data: chartData.map(d => d.purchases),
+                borderColor: '#9333ea',
+                backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                tension: 0.4
+            },
+            {
+                label: 'Redemptions',
+                data: chartData.map(d => d.redemptions),
+                borderColor: '#ea580c',
+                backgroundColor: 'rgba(234, 88, 12, 0.1)',
+                tension: 0.4
+            },
+            {
+                label: 'Referrals',
+                data: chartData.map(d => d.referrals),
+                borderColor: '#db2777',
+                backgroundColor: 'rgba(219, 39, 119, 0.1)',
+                tension: 0.4
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        }
+    }
+});
+</script>

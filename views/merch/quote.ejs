@@ -1,0 +1,199 @@
+<% layout('../layout') -%>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <header class="mb-8 flex items-center gap-4">
+        <a href="/merch" class="p-2 rounded-md border border-gray-300 bg-white hover:bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </a>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Redeem Credits</h1>
+            <p class="text-gray-600">Apply your credits to purchase <%= product.name %></p>
+        </div>
+    </header>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Product Info -->
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="aspect-square bg-gray-100 rounded-t-lg overflow-hidden">
+                <img
+                    src="<%= product.image %>"
+                    alt="<%= product.name %>"
+                    class="w-full h-full object-cover"
+                    onerror="this.src='/images/placeholder.jpg'"
+                >
+            </div>
+            <div class="p-6">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-xl font-bold text-gray-900"><%= product.name %></h3>
+                    <span class="px-2 py-1 bg-gray-100 text-gray-800 text-sm rounded-md"><%= product.category %></span>
+                </div>
+                <p class="text-gray-600 mb-4"><%= product.description %></p>
+                <div class="text-2xl font-bold text-gray-900">$<%= product.price.toFixed(2) %></div>
+            </div>
+        </div>
+
+        <!-- Quote Form -->
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                    <h3 class="text-lg font-semibold">Your Credits</h3>
+                </div>
+                <div class="text-2xl font-bold text-blue-600 mb-2"><%= user.credits.toLocaleString() %> credits</div>
+                <p class="text-sm text-gray-600">1 credit = $0.03 • Max 60% of item price</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">Apply Credits</h3>
+
+                <div class="mb-4">
+                    <label for="credits" class="block text-sm font-medium text-gray-700 mb-2">Credits to use</label>
+                    <input
+                        id="credits"
+                        type="number"
+                        min="0"
+                        max="<%= user.credits %>"
+                        value="0"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        onchange="getQuote()"
+                    >
+                </div>
+
+                <div id="error-message" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <p class="text-sm text-red-600"></p>
+                </div>
+
+                <div id="quote-display" class="hidden space-y-3 p-4 bg-gray-50 rounded-lg mb-4">
+                    <!-- Quote details will be populated by JavaScript -->
+                </div>
+
+                <form method="POST" action="/merch/redeem" id="redeem-form" class="hidden">
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                    <input type="hidden" name="creditsToUse" id="form-credits">
+                    <input type="hidden" name="cashAmount" id="form-cash-amount">
+                    
+                    <button
+                        type="submit"
+                        id="redeem-button"
+                        class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        Complete Redemption
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentQuote = null;
+
+async function getQuote() {
+    const creditsInput = document.getElementById('credits');
+    const creditsToUse = parseInt(creditsInput.value) || 0;
+    
+    if (creditsToUse <= 0) {
+        hideQuote();
+        return;
+    }
+
+    try {
+        const response = await fetch('/merch/quote', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productId: '<%= product._id %>',
+                creditsToUse: creditsToUse
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            showError(data.error);
+            hideQuote();
+            return;
+        }
+
+        hideError();
+        showQuote(data.quote);
+        currentQuote = data.quote;
+    } catch (error) {
+        showError('Failed to get quote. Please try again.');
+        hideQuote();
+    }
+}
+
+function showQuote(quote) {
+    const quoteDisplay = document.getElementById('quote-display');
+    const redeemForm = document.getElementById('redeem-form');
+    
+    quoteDisplay.innerHTML = `
+        <div class="flex justify-between">
+            <span>Item Price:</span>
+            <span>$${quote.itemPrice.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between text-blue-600">
+            <span>Credits Applied (${quote.creditsToUse}):</span>
+            <span>-$${quote.creditsValue.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between">
+            <span>Cash Amount:</span>
+            <span>$${quote.cashAmount.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between">
+            <span>Shipping:</span>
+            <span>$${quote.shipping.toFixed(2)}</span>
+        </div>
+        <div class="flex justify-between">
+            <span>Tax:</span>
+            <span>$${quote.tax.toFixed(2)}</span>
+        </div>
+        <hr>
+        <div class="flex justify-between font-bold text-lg">
+            <span>Total to Pay:</span>
+            <span>$${quote.total.toFixed(2)}</span>
+        </div>
+        ${quote.creditsUsedPercentage >= 60 ? `
+            <div class="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+                <p class="text-sm text-yellow-800">
+                    Credits capped at 60% of item price (${quote.maxCreditsAllowed} credits max)
+                </p>
+            </div>
+        ` : ''}
+    `;
+    
+    // Update form fields
+    document.getElementById('form-credits').value = quote.creditsToUse;
+    document.getElementById('form-cash-amount').value = quote.total;
+    
+    quoteDisplay.classList.remove('hidden');
+    redeemForm.classList.remove('hidden');
+}
+
+function hideQuote() {
+    const quoteDisplay = document.getElementById('quote-display');
+    const redeemForm = document.getElementById('redeem-form');
+    
+    quoteDisplay.classList.add('hidden');
+    redeemForm.classList.add('hidden');
+    currentQuote = null;
+}
+
+function showError(message) {
+    const errorDiv = document.getElementById('error-message');
+    errorDiv.querySelector('p').textContent = message;
+    errorDiv.classList.remove('hidden');
+}
+
+function hideError() {
+    const errorDiv = document.getElementById('error-message');
+    errorDiv.classList.add('hidden');
+}
+</script>

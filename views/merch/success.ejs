@@ -1,0 +1,35 @@
+<% layout('../layout') -%>
+
+<div class="max-w-2xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-lg shadow-md p-8 text-center">
+        <div class="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+            <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-green-600 mb-2">Redemption Successful!</h2>
+        <p class="text-gray-600 mb-6">
+            You've successfully redeemed <%= creditsUsed %> credits for <%= product.name %>. 
+            Your item will be shipped to your registered address.
+        </p>
+        
+        <div class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+            <h3 class="font-semibold text-gray-800 mb-2">Order Details:</h3>
+            <div class="text-sm text-gray-600 space-y-1">
+                <p><strong>Product:</strong> <%= product.name %></p>
+                <p><strong>Credits Used:</strong> <%= creditsUsed %></p>
+                <p><strong>Order ID:</strong> <%= redemption._id %></p>
+                <p><strong>Status:</strong> <span class="text-green-600 font-medium">Completed</span></p>
+            </div>
+        </div>
+        
+        <div class="space-x-4">
+            <a href="/merch" class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Continue Shopping
+            </a>
+            <a href="/" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                Back to Home
+            </a>
+        </div>
+    </div>
+</div>
