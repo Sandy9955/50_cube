@@ -17,6 +17,10 @@ import Footer from './components/Footer';
 import './App.css';
 
 function App() {
+  console.log('App component is rendering');
+  console.log('Environment:', process.env.NODE_ENV);
+  console.log('API URL:', process.env.REACT_APP_API_URL);
+
   return (
     <Router>
       <div className="App min-h-screen flex flex-col">
