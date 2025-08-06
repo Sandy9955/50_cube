@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeftIcon, FunnelIcon } from '@heroicons/react/24/outline';
-import api from '../services/api';
+import { ArrowLeftIcon, FunnelIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import api, { authService } from '../services/api';
 
 const Card = ({ children, className = "", ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 ${className}`} {...props}>
@@ -86,20 +86,6 @@ const Select = ({ value, onValueChange, children, className = "" }) => (
   </select>
 );
 
-const SelectTrigger = ({ children, className = "" }) => (
-  <div className={`flex h-10 w-full items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}>
-    {children}
-  </div>
-);
-
-const SelectValue = ({ placeholder }) => placeholder;
-
-const SelectContent = ({ children }) => children;
-
-const SelectItem = ({ value, children }) => (
-  <option value={value}>{children}</option>
-);
-
 const Table = ({ children, className = "" }) => (
   <div className={`w-full overflow-auto ${className}`}>
     <table className="w-full caption-bottom text-sm">
@@ -109,21 +95,17 @@ const Table = ({ children, className = "" }) => (
 );
 
 const TableHeader = ({ children }) => <thead className="[&_tr]:border-b">{children}</thead>;
-
 const TableBody = ({ children }) => <tbody className="[&_tr:last-child]:border-0">{children}</tbody>;
-
 const TableRow = ({ children, className = "" }) => (
   <tr className={`border-b transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-50 ${className}`}>
     {children}
   </tr>
 );
-
 const TableHead = ({ children, className = "" }) => (
   <th className={`h-12 px-4 text-left align-middle font-medium text-gray-500 [&:has([role=checkbox])]:pr-0 ${className}`}>
     {children}
   </th>
 );
-
 const TableCell = ({ children, className = "" }) => (
   <td className={`p-4 align-middle [&:has([role=checkbox])]:pr-0 ${className}`}>
     {children}
@@ -144,13 +126,64 @@ const stateLabels = {
   archive: "Archive",
 };
 
+const sampleLanes = [
+  {
+    id: "1",
+    name: "JavaScript Fundamentals",
+    category: "Programming",
+    impactScore: 85,
+    state: "ok",
+    metrics: { views: 12450, completions: 8930, engagement: 72 },
+    lastUpdated: "2024-01-15T10:30:00Z"
+  },
+  {
+    id: "2",
+    name: "React Basics",
+    category: "Frontend",
+    impactScore: 78,
+    state: "ok",
+    metrics: { views: 9870, completions: 6540, engagement: 66 },
+    lastUpdated: "2024-01-14T14:20:00Z"
+  },
+  {
+    id: "3",
+    name: "Database Design",
+    category: "Backend",
+    impactScore: 45,
+    state: "watchlist",
+    metrics: { views: 3420, completions: 1230, engagement: 36 },
+    lastUpdated: "2024-01-13T09:15:00Z"
+  },
+  {
+    id: "4",
+    name: "Advanced CSS",
+    category: "Frontend",
+    impactScore: 92,
+    state: "save",
+    metrics: { views: 15670, completions: 12340, engagement: 79 },
+    lastUpdated: "2024-01-12T16:45:00Z"
+  },
+  {
+    id: "5",
+    name: "Python for Beginners",
+    category: "Programming",
+    impactScore: 88,
+    state: "ok",
+    metrics: { views: 18920, completions: 14560, engagement: 77 },
+    lastUpdated: "2024-01-11T11:30:00Z"
+  }
+];
+
 export default function AdminLanesPage() {
   const [lanes, setLanes] = useState([]);
   const [filteredLanes, setFilteredLanes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stateFilter, setStateFilter] = useState("all");
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    fetchUser();
     fetchLanes();
   }, []);
 
@@ -162,61 +195,31 @@ export default function AdminLanesPage() {
     }
   }, [lanes, stateFilter]);
 
+  const fetchUser = async () => {
+    try {
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+      setIsAdmin(userData?.isAdmin);
+    } catch {
+      setUser(null);
+      setIsAdmin(false);
+    }
+  };
+
   const fetchLanes = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/admin/lanes');
-      setLanes(response.data.lanes);
+      if (isAdmin) {
+        const response = await api.get('/admin/lanes');
+        setLanes(response.data.lanes.map(lane => ({
+          ...lane,
+          id: lane._id || lane.id,
+          lastUpdated: lane.updatedAt || lane.lastUpdated
+        })));
+      } else {
+        setLanes(sampleLanes);
+      }
     } catch (error) {
-      console.log("Using sample lanes data");
-      // Use sample lanes data when API is not available
-      const sampleLanes = [
-        {
-          id: "1",
-          name: "JavaScript Fundamentals",
-          category: "Programming",
-          impactScore: 85,
-          state: "ok",
-          metrics: { views: 12450, completions: 8930, engagement: 72 },
-          lastUpdated: "2024-01-15T10:30:00Z"
-        },
-        {
-          id: "2",
-          name: "React Basics",
-          category: "Frontend",
-          impactScore: 78,
-          state: "ok",
-          metrics: { views: 9870, completions: 6540, engagement: 66 },
-          lastUpdated: "2024-01-14T14:20:00Z"
-        },
-        {
-          id: "3",
-          name: "Database Design",
-          category: "Backend",
-          impactScore: 45,
-          state: "watchlist",
-          metrics: { views: 3420, completions: 1230, engagement: 36 },
-          lastUpdated: "2024-01-13T09:15:00Z"
-        },
-        {
-          id: "4",
-          name: "Advanced CSS",
-          category: "Frontend",
-          impactScore: 92,
-          state: "save",
-          metrics: { views: 15670, completions: 12340, engagement: 79 },
-          lastUpdated: "2024-01-12T16:45:00Z"
-        },
-        {
-          id: "5",
-          name: "Python for Beginners",
-          category: "Programming",
-          impactScore: 88,
-          state: "ok",
-          metrics: { views: 18920, completions: 14560, engagement: 77 },
-          lastUpdated: "2024-01-11T11:30:00Z"
-        }
-      ];
       setLanes(sampleLanes);
     } finally {
       setLoading(false);
@@ -224,11 +227,11 @@ export default function AdminLanesPage() {
   };
 
   const updateLaneState = async (laneId, newState) => {
+    if (!isAdmin) return; // Only allow for admins
     try {
       const response = await api.put(`/admin/lanes/${laneId}/state`, {
         state: newState,
       });
-
       if (response.status === 200) {
         setLanes(
           lanes.map((lane) =>
@@ -239,15 +242,7 @@ export default function AdminLanesPage() {
         );
       }
     } catch (error) {
-      console.log("Using local state update for sample data");
-      // Update state locally for sample data
-      setLanes(
-        lanes.map((lane) =>
-          lane.id === laneId
-            ? { ...lane, state: newState, lastUpdated: new Date().toISOString() }
-            : lane,
-        ),
-      );
+      // No-op for demo
     }
   };
 
@@ -267,7 +262,7 @@ export default function AdminLanesPage() {
             </Button>
           </Link>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">Impact Score & Rotation Console</h1>
+            <h1 className="text-3xl font-bold text-gray-900">M18 - Impact Score & Rotation Console</h1>
             <p className="text-gray-600">Evaluate and manage content lanes</p>
           </div>
           <div className="flex items-center gap-2">
@@ -281,6 +276,14 @@ export default function AdminLanesPage() {
             </Select>
           </div>
         </header>
+
+        {/* Read-only banner for non-admins */}
+        {!isAdmin && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md flex items-center gap-2">
+            <ExclamationTriangleIcon className="h-5 w-5 text-blue-400" />
+            <span className="text-blue-800 font-medium">Read-only demo mode: Sign in as an admin to manage lanes.</span>
+          </div>
+        )}
 
         <Card>
           <CardHeader>
@@ -310,7 +313,7 @@ export default function AdminLanesPage() {
                     <TableHead>Engagement</TableHead>
                     <TableHead>State</TableHead>
                     <TableHead>Last Updated</TableHead>
-                    <TableHead>Actions</TableHead>
+                    {isAdmin && <TableHead>Actions</TableHead>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -332,18 +335,20 @@ export default function AdminLanesPage() {
                       <TableCell className="text-sm text-gray-500">
                         {new Date(lane.lastUpdated).toLocaleDateString()}
                       </TableCell>
-                      <TableCell>
-                        <Select 
-                          value={lane.state} 
-                          onValueChange={(value) => updateLaneState(lane.id, value)}
-                          className="w-32"
-                        >
-                          <option value="ok">OK</option>
-                          <option value="watchlist">Watchlist</option>
-                          <option value="save">Save</option>
-                          <option value="archive">Archive</option>
-                        </Select>
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell>
+                          <Select 
+                            value={lane.state} 
+                            onValueChange={(value) => updateLaneState(lane.id, value)}
+                            className="w-32"
+                          >
+                            <option value="ok">OK</option>
+                            <option value="watchlist">Watchlist</option>
+                            <option value="save">Save</option>
+                            <option value="archive">Archive</option>
+                          </Select>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

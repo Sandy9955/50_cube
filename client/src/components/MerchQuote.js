@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeftIcon, CreditCardIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline';
-import api from '../services/api';
+import { ArrowLeftIcon, CreditCardIcon, CurrencyDollarIcon, CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import api, { authService } from '../services/api';
 
 const Card = ({ children, className = "", ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 ${className}`} {...props}>
@@ -38,7 +38,8 @@ const Button = ({ children, variant = "default", size = "default", className = "
   const variants = {
     default: "bg-blue-600 text-white hover:bg-blue-700",
     outline: "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50",
-    secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200"
+    secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
+    success: "bg-green-600 text-white hover:bg-green-700"
   };
   
   const sizes = {
@@ -82,7 +83,9 @@ const Label = ({ htmlFor, children, className = "" }) => (
 const Alert = ({ children, variant = "default", className = "" }) => {
   const variants = {
     default: "bg-blue-50 text-blue-800 border-blue-200",
-    destructive: "bg-red-50 text-red-800 border-red-200"
+    destructive: "bg-red-50 text-red-800 border-red-200",
+    warning: "bg-yellow-50 text-yellow-800 border-yellow-200",
+    success: "bg-green-50 text-green-800 border-green-200"
   };
   
   return (
@@ -102,7 +105,8 @@ const Badge = ({ children, variant = "default", className = "" }) => {
   const variants = {
     default: "bg-blue-100 text-blue-800",
     secondary: "bg-gray-100 text-gray-800",
-    destructive: "bg-red-100 text-red-800"
+    destructive: "bg-red-100 text-red-800",
+    success: "bg-green-100 text-green-800"
   };
   
   return (
@@ -113,33 +117,55 @@ const Badge = ({ children, variant = "default", className = "" }) => {
 };
 
 export default function MerchQuote({ product, onBack }) {
-  const [userCredits] = useState(2500); // Mock user credits
+  const [userCredits, setUserCredits] = useState(0);
   const [creditsToUse, setCreditsToUse] = useState(0);
   const [quote, setQuote] = useState(null);
   const [loading, setLoading] = useState(false);
   const [redeeming, setRedeeming] = useState(false);
   const [redeemed, setRedeemed] = useState(false);
   const [error, setError] = useState("");
+  const [user, setUser] = useState(null);
+
+  // Business rules
+  const CREDIT_VALUE = 0.03; // 1 credit = $0.03
+  const MAX_COVERAGE_PERCENTAGE = 0.6; // Max 60% coverage
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
 
   useEffect(() => {
     if (creditsToUse > 0) {
       getQuote();
+    } else {
+      setQuote(null);
     }
   }, [creditsToUse]);
+
+  const loadUserData = async () => {
+    try {
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+      setUserCredits(userData?.credits || 0);
+    } catch (error) {
+      console.error('Failed to load user data:', error);
+      setError('Failed to load user data');
+    }
+  };
 
   const getQuote = async () => {
     setLoading(true);
     setError("");
 
     try {
-      // Call real API
       const response = await api.post('/merch/quote', {
-        productId: product.id,
+        productId: product.id || product._id,
         creditsToUse: creditsToUse,
       });
       setQuote(response.data.quote);
     } catch (error) {
       setError(error.response?.data?.error || "Failed to get quote");
+      setQuote(null);
     } finally {
       setLoading(false);
     }
@@ -152,9 +178,8 @@ export default function MerchQuote({ product, onBack }) {
     setError("");
 
     try {
-      // Call real API
       const response = await api.post('/merch/redeem', {
-        productId: product.id,
+        productId: product.id || product._id,
         creditsToUse: creditsToUse,
         cashAmount: quote.cashAmount + quote.shipping + quote.tax,
         shippingAddress: {
@@ -165,13 +190,20 @@ export default function MerchQuote({ product, onBack }) {
           country: "US"
         }
       });
+      
       setRedeemed(true);
+      // Refresh user data to show updated credits
+      await loadUserData();
     } catch (error) {
       setError(error.response?.data?.error || "Redemption failed");
     } finally {
       setRedeeming(false);
     }
   };
+
+  // Calculate max credits allowed for this product
+  const maxCreditsAllowed = Math.floor((product.price * MAX_COVERAGE_PERCENTAGE) / CREDIT_VALUE);
+  const maxCreditsUserCanUse = Math.min(maxCreditsAllowed, userCredits);
 
   if (redeemed) {
     return (
@@ -180,19 +212,44 @@ export default function MerchQuote({ product, onBack }) {
           <Card className="text-center">
             <CardHeader>
               <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                <CreditCardIcon className="h-8 w-8 text-green-600" />
+                <CheckCircleIcon className="h-8 w-8 text-green-600" />
               </div>
               <CardTitle className="text-2xl text-green-600">Redemption Successful!</CardTitle>
-              <CardDescription>Your order has been processed</CardDescription>
+              <CardDescription>Your order has been processed and payment completed</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-6">
-                You've successfully redeemed {creditsToUse} credits for {product.name}. Your item will be shipped to
-                your registered address.
-              </p>
-              <Button onClick={onBack} className="rounded-md">
-                Continue Shopping
-              </Button>
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-green-800 mb-2">Order Summary</h4>
+                  <div className="text-sm text-green-700 space-y-1">
+                    <div className="flex justify-between">
+                      <span>Product:</span>
+                      <span>{product.name}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Credits Used:</span>
+                      <span>{creditsToUse.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Cash Paid:</span>
+                      <span>${quote?.total.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <p className="text-gray-600">
+                  Your item will be shipped to your registered address. You'll receive a confirmation email with tracking details.
+                </p>
+                
+                <div className="flex gap-3 justify-center">
+                  <Button onClick={onBack} variant="outline">
+                    Continue Shopping
+                  </Button>
+                  <Button onClick={() => window.location.href = '/profile'}>
+                    View Orders
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -208,7 +265,7 @@ export default function MerchQuote({ product, onBack }) {
             <ArrowLeftIcon className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Redeem Credits</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Merch Quote & Redeem</h1>
             <p className="text-gray-600">Apply your credits to purchase {product.name}</p>
           </div>
         </header>
@@ -230,11 +287,27 @@ export default function MerchQuote({ product, onBack }) {
               </CardTitle>
               <CardDescription>{product.description}</CardDescription>
               <div className="text-2xl font-bold text-gray-900">${product.price.toFixed(2)}</div>
+              
+              {/* Product Features */}
+              {product.features && product.features.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Features:</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    {product.features.slice(0, 3).map((feature, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </CardHeader>
           </Card>
 
           {/* Quote Form */}
           <div className="space-y-6">
+            {/* User Credits */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -244,10 +317,21 @@ export default function MerchQuote({ product, onBack }) {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-blue-600 mb-2">{userCredits.toLocaleString()} credits</div>
-                <p className="text-sm text-gray-600">1 credit = $0.03 • Max 60% of item price</p>
+                <p className="text-sm text-gray-600">
+                  1 credit = ${CREDIT_VALUE.toFixed(2)} • Max {MAX_COVERAGE_PERCENTAGE * 100}% of item price
+                </p>
+                {user?.pendingCredits > 0 && (
+                  <Alert variant="warning" className="mt-3">
+                    <AlertDescription>
+                      <ExclamationTriangleIcon className="h-4 w-4 inline mr-1" />
+                      You have {user.pendingCredits} pending credits that need to be resolved before new redemptions.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </CardContent>
             </Card>
 
+            {/* Credit Application */}
             <Card>
               <CardHeader>
                 <CardTitle>Apply Credits</CardTitle>
@@ -259,18 +343,19 @@ export default function MerchQuote({ product, onBack }) {
                     id="credits"
                     type="number"
                     min="0"
-                    max={userCredits}
+                    max={maxCreditsUserCanUse}
                     value={creditsToUse}
                     onChange={(e) => setCreditsToUse(Number.parseInt(e.target.value) || 0)}
                     className="rounded-md focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter credits to use"
                   />
                   
                   {/* Quick redeem options */}
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex gap-2 mt-2 flex-wrap">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setCreditsToUse(Math.min(500, userCredits))}
+                      onClick={() => setCreditsToUse(Math.min(500, maxCreditsUserCanUse))}
                       className="text-xs"
                     >
                       Use 500
@@ -278,7 +363,7 @@ export default function MerchQuote({ product, onBack }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setCreditsToUse(Math.min(1000, userCredits))}
+                      onClick={() => setCreditsToUse(Math.min(1000, maxCreditsUserCanUse))}
                       className="text-xs"
                     >
                       Use 1000
@@ -286,14 +371,17 @@ export default function MerchQuote({ product, onBack }) {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => {
-                        const maxAllowed = Math.floor(product.price * 0.6 / 0.03);
-                        setCreditsToUse(Math.min(maxAllowed, userCredits));
-                      }}
+                      onClick={() => setCreditsToUse(maxCreditsUserCanUse)}
                       className="text-xs"
                     >
-                      Max (60%)
+                      Max ({maxCreditsUserCanUse.toLocaleString()})
                     </Button>
+                  </div>
+                  
+                  {/* Credit limits info */}
+                  <div className="mt-2 text-xs text-gray-500">
+                    <p>Max credits for this item: {maxCreditsAllowed.toLocaleString()} (60% of ${product.price.toFixed(2)})</p>
+                    <p>Your available credits: {userCredits.toLocaleString()}</p>
                   </div>
                 </div>
 
@@ -312,26 +400,31 @@ export default function MerchQuote({ product, onBack }) {
 
                 {quote && (
                   <div className="space-y-3 p-4 bg-gray-50 rounded-lg">
-                    <div className="flex justify-between">
-                      <span>Item Price:</span>
-                      <span>${quote.itemPrice.toFixed(2)}</span>
+                    <h4 className="font-semibold text-gray-900">Quote Breakdown</h4>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Item Price:</span>
+                        <span>${quote.itemPrice.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-green-600">
+                        <span>Credits Applied ({quote.creditsToUse.toLocaleString()}):</span>
+                        <span>-${quote.creditsValue.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Cash Amount:</span>
+                        <span>${quote.cashAmount.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Shipping:</span>
+                        <span>${quote.shipping.toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Tax:</span>
+                        <span>${quote.tax.toFixed(2)}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between text-green-600">
-                      <span>Credits Applied ({quote.creditsToUse}):</span>
-                      <span>-${quote.creditsValue.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Cash Amount:</span>
-                      <span>${quote.cashAmount.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Shipping:</span>
-                      <span>${quote.shipping.toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Tax:</span>
-                      <span>${quote.tax.toFixed(2)}</span>
-                    </div>
+                    
                     <hr />
                     <div className="flex justify-between font-bold text-lg">
                       <span>Total to Pay:</span>
@@ -350,9 +443,9 @@ export default function MerchQuote({ product, onBack }) {
                     </div>
 
                     {quote.creditsUsedPercentage >= 60 && (
-                      <Alert>
+                      <Alert variant="warning">
                         <AlertDescription>
-                          Credits capped at 60% of item price ({quote.maxCreditsAllowed} credits max)
+                          Credits capped at 60% of item price ({quote.maxCreditsAllowed.toLocaleString()} credits max)
                         </AlertDescription>
                       </Alert>
                     )}
@@ -363,8 +456,9 @@ export default function MerchQuote({ product, onBack }) {
                   <div className="space-y-3">
                     <Button
                       onClick={handleRedeem}
-                      disabled={redeeming || loading}
-                      className="w-full rounded-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 bg-green-600 hover:bg-green-700"
+                      disabled={redeeming || loading || user?.pendingCredits > 0}
+                      className="w-full rounded-md focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      variant="success"
                     >
                       {redeeming ? (
                         <div className="flex items-center gap-2">
@@ -381,7 +475,7 @@ export default function MerchQuote({ product, onBack }) {
                     
                     <div className="text-center">
                       <p className="text-xs text-gray-500">
-                        You'll be redirected to secure payment after redemption
+                        Secure payment processing • Shipping included • 30-day returns
                       </p>
                     </div>
                   </div>

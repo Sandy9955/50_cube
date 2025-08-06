@@ -123,16 +123,16 @@ const ProductDetail = ({ product, onBack, onRedeem }) => {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <Badge variant="secondary">{product.category}</Badge>
-                {product.rating && (
+                {(product.rating?.average || product.rating) && (
                   <div className="flex items-center gap-1">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <StarIcon 
                         key={star} 
-                        className={`h-4 w-4 ${star <= Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                        className={`h-4 w-4 ${star <= Math.floor(product.rating?.average || product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                       />
                     ))}
                     <span className="text-sm text-gray-600 ml-1">
-                      ({product.reviews || 0} reviews)
+                      ({product.rating?.count || product.reviews || 0} reviews)
                     </span>
                   </div>
                 )}

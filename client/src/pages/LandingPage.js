@@ -73,26 +73,259 @@ export default function LandingPage() {
   console.log('Environment:', process.env.NODE_ENV);
   console.log('API URL:', process.env.REACT_APP_API_URL);
 
-  // Temporary simple version to test
   return (
-    <div className="min-h-screen bg-blue-50 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-blue-600 mb-4">50cube Platform</h1>
-        <p className="text-xl text-gray-700 mb-8">Welcome to the interactive learning platform!</p>
-        <div className="space-y-4">
-          <Link to="/signup">
-            <Button size="lg">
-              Get Started
-            </Button>
-          </Link>
-          <br />
-          <Link to="/signin">
-            <Button variant="outline" size="lg">
-              Sign In
-            </Button>
-          </Link>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            50Cube Platform
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Interactive learning platform with bite-sized modules and a points-based system
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link to="/signup">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                Get Started
+              </Button>
+            </Link>
+            <Link to="/signin">
+              <Button variant="outline" size="lg">
+                Sign In
+              </Button>
+            </Link>
+          </div>
         </div>
-        <div className="mt-8 text-sm text-gray-500">
+
+        {/* Module Showcase */}
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          {/* M16 - Merch Store */}
+          <Card className="hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <ShoppingBagIcon className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <CardTitle>M16 - Merch Store</CardTitle>
+                  <CardDescription>Credit Redemption System</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>12 Demo Products</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Credit Quote Calculator</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Secure Payment Processing</span>
+                </div>
+                <div className="pt-4">
+                  <Link to="/merch">
+                    <Button className="w-full bg-green-600 hover:bg-green-700">
+                      <ShoppingBagIcon className="h-4 w-4 mr-2" />
+                      Visit Merch Store
+                      <ArrowRightIcon className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* M17 - Admin Metrics */}
+          <Card className="hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <ChartBarIcon className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <CardTitle>M17 - Admin Metrics</CardTitle>
+                  <CardDescription>Platform KPI Dashboard</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Real-time Metrics</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Interactive Charts</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Date Filtering</span>
+                </div>
+                <div className="pt-4">
+                  <Link to="/admin/metrics">
+                    <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                      <ChartBarIcon className="h-4 w-4 mr-2" />
+                      View Admin Metrics
+                      <ArrowRightIcon className="h-4 w-4 ml-2" />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Additional Modules */}
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          {/* M18 - Impact Score & Rotation */}
+          <Card className="hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-orange-100 rounded-lg">
+                  <CogIcon className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <CardTitle>M18 - Impact Score</CardTitle>
+                  <CardDescription>Lane Management Console</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>8 Demo Lanes</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>State Management</span>
+                </div>
+                <div className="pt-4">
+                  <Link to="/admin/lanes">
+                    <Button variant="outline" className="w-full">
+                      <CogIcon className="h-4 w-4 mr-2" />
+                      Manage Lanes
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* User Dashboard */}
+          <Card className="hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <UserIcon className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <CardTitle>User Dashboard</CardTitle>
+                  <CardDescription>Personal Learning Hub</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Progress Tracking</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Credit Management</span>
+                </div>
+                <div className="pt-4">
+                  <Link to="/dashboard">
+                    <Button variant="outline" className="w-full">
+                      <UserIcon className="h-4 w-4 mr-2" />
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Admin Panel */}
+          <Card className="hover:shadow-lg transition-shadow duration-300">
+            <CardHeader>
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-red-100 rounded-lg">
+                  <CogIcon className="h-6 w-6 text-red-600" />
+                </div>
+                <div>
+                  <CardTitle>Admin Panel</CardTitle>
+                  <CardDescription>Platform Management</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>Product Management</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <CheckCircleIcon className="h-4 w-4 text-green-500" />
+                  <span>User Management</span>
+                </div>
+                <div className="pt-4">
+                  <Link to="/admin">
+                    <Button variant="outline" className="w-full">
+                      <CogIcon className="h-4 w-4 mr-2" />
+                      Admin Panel
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Features Section */}
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">Platform Features</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <StarIcon className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Interactive Modules</h3>
+              <p className="text-sm text-gray-600">Bite-sized learning experiences</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ShoppingBagIcon className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Credit System</h3>
+              <p className="text-sm text-gray-600">Points-based rewards and redemption</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <ChartBarIcon className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Analytics</h3>
+              <p className="text-sm text-gray-600">Real-time metrics and insights</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <CogIcon className="h-6 w-6 text-orange-600" />
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-2">Management</h3>
+              <p className="text-sm text-gray-600">Comprehensive admin tools</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Environment Info */}
+        <div className="mt-16 text-center text-sm text-gray-500">
           <p>Environment: {process.env.NODE_ENV}</p>
           <p>API URL: {process.env.REACT_APP_API_URL}</p>
         </div>

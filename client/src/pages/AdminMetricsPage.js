@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeftIcon, ArrowTrendingUpIcon, UsersIcon, ShoppingCartIcon, GiftIcon, UserPlusIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowTrendingUpIcon, UsersIcon, ShoppingCartIcon, GiftIcon, UserPlusIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { sampleMetrics, filterMetricsByDate } from '../data/sampleMetrics';
-import api from '../services/api';
+import api, { authService } from '../services/api';
 
 const Card = ({ children, className = "", ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 ${className}`} {...props}>
@@ -86,10 +86,24 @@ export default function AdminMetricsPage() {
   const [dateFilter, setDateFilter] = useState("");
   const [lastUpdated, setLastUpdated] = useState(new Date());
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
+    fetchUser();
     fetchMetrics();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const userData = await authService.getCurrentUser();
+      setUser(userData);
+      setIsAdmin(userData?.isAdmin);
+    } catch {
+      setUser(null);
+      setIsAdmin(false);
+    }
+  };
 
   const fetchMetrics = async (since) => {
     setLoading(true);
@@ -100,8 +114,7 @@ export default function AdminMetricsPage() {
       setMetrics(response.data);
       setLastUpdated(new Date());
     } catch (error) {
-      console.log("Using sample metrics data");
-      setError("Failed to fetch metrics from server. Using sample data.");
+      setError("Failed to fetch metrics from server. Showing demo data.");
       if (since) {
         setMetrics(filterMetricsByDate(sampleMetrics, since));
       } else {
@@ -211,6 +224,14 @@ export default function AdminMetricsPage() {
             </Button>
           </div>
         </header>
+
+        {/* Read-only banner for non-admins */}
+        {!isAdmin && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-md flex items-center gap-2">
+            <ExclamationTriangleIcon className="h-5 w-5 text-blue-400" />
+            <span className="text-blue-800 font-medium">Read-only demo mode: Sign in as an admin to see live metrics.</span>
+          </div>
+        )}
 
         {error && (
           <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">

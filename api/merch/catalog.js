@@ -65,32 +65,82 @@ module.exports = async (req, res) => {
       const sampleProducts = [
         {
           _id: '1',
-          name: '50Cube T-Shirt',
-          description: 'Comfortable cotton t-shirt with 50Cube branding',
-          price: 25.00,
+          name: '50Cube Premium T-Shirt',
+          description: 'Comfortable cotton t-shirt with 50Cube branding. Perfect for developers and tech enthusiasts.',
+          price: 29.99,
           category: 'Apparel',
-          image: 'https://via.placeholder.com/300x300?text=50Cube+T-Shirt',
-          features: ['100% Cotton', 'Multiple sizes', 'Machine washable'],
+          image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
+          features: ['Premium cotton', '50Cube branding', 'Comfortable fit', 'Multiple sizes'],
           inStock: true
         },
         {
           _id: '2',
-          name: '50Cube Water Bottle',
-          description: 'Stainless steel water bottle with 50Cube logo',
-          price: 35.00,
+          name: '50Cube Coffee Mug',
+          description: 'Ceramic coffee mug with 50Cube logo. Perfect for your morning coding sessions.',
+          price: 19.99,
           category: 'Drinkware',
-          image: 'https://via.placeholder.com/300x300?text=50Cube+Water+Bottle',
-          features: ['Stainless steel', '500ml capacity', 'BPA free'],
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
+          features: ['350ml capacity', 'Microwave safe', '50Cube branding', 'Dishwasher safe'],
           inStock: true
         },
         {
           _id: '3',
+          name: '50Cube Hoodie',
+          description: 'Comfortable hoodie with 50Cube branding. Perfect for late-night coding sessions.',
+          price: 59.99,
+          category: 'Apparel',
+          image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop',
+          features: ['Fleece lining', 'Kangaroo pocket', '50Cube branding', 'Comfortable fit'],
+          inStock: true
+        },
+        {
+          _id: '4',
           name: '50Cube Notebook',
-          description: 'Premium notebook with 50Cube branding',
-          price: 15.00,
+          description: 'High-quality notebook with 50Cube branding. Perfect for taking notes and sketching ideas.',
+          price: 24.99,
           category: 'Stationery',
-          image: 'https://via.placeholder.com/300x300?text=50Cube+Notebook',
-          features: ['100 pages', 'Hardcover', 'A5 size'],
+          image: 'https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=400&h=400&fit=crop',
+          features: ['200 pages', 'Premium paper', '50Cube branding', 'Spiral binding'],
+          inStock: true
+        },
+        {
+          _id: '5',
+          name: '50Cube Sticker Pack',
+          description: 'Collection of 50Cube branded stickers. Perfect for laptops, water bottles, and more.',
+          price: 9.99,
+          category: 'Accessories',
+          image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop',
+          features: ['10 stickers', 'High quality vinyl', '50Cube branding', 'Various designs'],
+          inStock: true
+        },
+        {
+          _id: '6',
+          name: '50Cube Backpack',
+          description: 'Durable backpack with 50Cube branding. Perfect for carrying your laptop and essentials.',
+          price: 79.99,
+          category: 'Bags',
+          image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop',
+          features: ['Laptop compartment', 'Water resistant', '50Cube branding', 'Ergonomic design'],
+          inStock: true
+        },
+        {
+          _id: '7',
+          name: '50Cube Wireless Headphones',
+          description: 'Premium noise-canceling headphones with 50Cube branding. Perfect for focused work sessions.',
+          price: 89.99,
+          category: 'Electronics',
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+          features: ['Noise cancellation', '30-hour battery', '50Cube branding', 'Premium sound'],
+          inStock: true
+        },
+        {
+          _id: '8',
+          name: '50Cube Mechanical Keyboard',
+          description: 'RGB mechanical keyboard with 50Cube branding. Customizable backlighting and macro keys.',
+          price: 149.99,
+          category: 'Electronics',
+          image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop',
+          features: ['Cherry MX switches', 'RGB backlighting', '50Cube branding', 'Premium build'],
           inStock: true
         }
       ];

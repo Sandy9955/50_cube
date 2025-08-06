@@ -63,66 +63,28 @@ export default function HomePage() {
   };
 
   return (
-    <div className="bg-green-50 p-6">
-      <div className="max-w-4xl mx-auto">
-        <header className="mb-8 flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">50cube Platform</h1>
-            <p className="text-gray-600">Interactive learning platform with gamified systems</p>
-            {user && (
-              <p className="text-blue-600 mt-2 font-medium">
-                Welcome back, {user.firstName} {user.lastName}! 👋
-              </p>
-            )}
-          </div>
-          <div className="flex gap-3">
-            {user ? (
-              <>
-                <Link 
-                  to="/profile" 
-                  className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2"
-                >
-                  <UserIcon className="h-4 w-4" />
-                  {user.firstName || 'Profile'}
-                </Link>
-                {user.isAdmin && (
-                  <Link 
-                    to="/admin" 
-                    className="px-4 py-2 text-purple-600 hover:text-purple-700 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2"
-                  >
-                    <CogIcon className="h-4 w-4" />
-                    Admin
-                  </Link>
-                )}
-                <button 
-                  onClick={handleSignOut}
-                  className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md transition-colors"
-                >
-                  Sign Out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link 
-                  to="/signin" 
-                  className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link 
-                  to="/signup" 
-                  className="px-4 py-2 bg-blue-600 text-white hover:bg-blue-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors"
-                >
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
-        </header>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            50Cube Platform
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Interactive learning platform with gamified systems
+          </p>
+          {user && (
+            <p className="text-blue-600 font-medium">
+              Welcome back, {user.firstName} {user.lastName}! 👋
+            </p>
+          )}
+        </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* Feature Cards - Matching the image layout */}
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {/* Card 1: Merchandise Store */}
           <Link to="/merch" className="block">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 h-full">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <ShoppingBagIcon className="h-8 w-8 text-blue-600" />
@@ -147,12 +109,13 @@ export default function HomePage() {
             </Card>
           </Link>
 
+          {/* Card 2: Analytics Dashboard */}
           {user?.isAdmin ? (
             <Link to="/admin/metrics" className="block">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-green-500 focus:ring-offset-2 h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <ChartBarIcon className="h-8 w-8 text-green-600" />
+                    <ChartBarIcon className="h-8 w-8 text-blue-600" />
                     <div>
                       <CardTitle>Analytics Dashboard</CardTitle>
                       <CardDescription>Platform KPI dashboard</CardDescription>
@@ -166,37 +129,8 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             </Link>
-          ) : user ? (
-            <Link to="/profile" className="block">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <ChartBarIcon className="h-8 w-8 text-green-600" />
-                    <div>
-                      <CardTitle>My Analytics</CardTitle>
-                      <CardDescription>Personal performance metrics</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600">
-                    View your personal stats including bursts, wins, and achievements.
-                  </p>
-                  {user.stats && (
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 bg-green-50 rounded">
-                        <span className="text-green-700">Bursts: {user.stats.bursts || 0}</span>
-                      </div>
-                      <div className="p-2 bg-blue-50 rounded">
-                        <span className="text-blue-700">Wins: {user.stats.wins || 0}</span>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </Link>
           ) : (
-            <Card className="opacity-60 cursor-not-allowed">
+            <Card className="opacity-60 cursor-not-allowed h-full">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <ChartBarIcon className="h-8 w-8 text-gray-400" />
@@ -217,12 +151,13 @@ export default function HomePage() {
             </Card>
           )}
 
+          {/* Card 3: Impact Console */}
           {user?.isAdmin ? (
             <Link to="/admin/lanes" className="block">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <CogIcon className="h-8 w-8 text-purple-600" />
+                    <CogIcon className="h-8 w-8 text-blue-600" />
                     <div>
                       <CardTitle>Impact Console</CardTitle>
                       <CardDescription>Content lane management</CardDescription>
@@ -236,27 +171,8 @@ export default function HomePage() {
                 </CardContent>
               </Card>
             </Link>
-          ) : user ? (
-            <Link to="/merch" className="block">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <CogIcon className="h-8 w-8 text-purple-600" />
-                    <div>
-                      <CardTitle>Learning Paths</CardTitle>
-                      <CardDescription>Explore content lanes</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600">
-                    Discover learning paths and track your progress through different content areas.
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
           ) : (
-            <Card className="opacity-60 cursor-not-allowed">
+            <Card className="opacity-60 cursor-not-allowed h-full">
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <CogIcon className="h-8 w-8 text-gray-400" />
@@ -277,6 +193,36 @@ export default function HomePage() {
             </Card>
           )}
         </div>
+
+        {/* User Actions */}
+        {user && (
+          <div className="mt-12 text-center">
+            <div className="flex gap-4 justify-center">
+              <Link 
+                to="/profile" 
+                className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2"
+              >
+                <UserIcon className="h-4 w-4" />
+                {user.firstName || 'Profile'}
+              </Link>
+              {user.isAdmin && (
+                <Link 
+                  to="/admin" 
+                  className="px-4 py-2 text-purple-600 hover:text-purple-700 font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2"
+                >
+                  <CogIcon className="h-4 w-4" />
+                  Admin Panel
+                </Link>
+              )}
+              <button 
+                onClick={handleSignOut}
+                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded-md transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

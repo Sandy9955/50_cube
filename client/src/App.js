@@ -13,6 +13,8 @@ import UserProfilePage from './pages/UserProfilePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminProtectedRoute from './components/AdminProtectedRoute';
 import LandingPage from './pages/LandingPage';
+import Navigation from './components/Navigation';
+import QuickAccess from './components/QuickAccess';
 import Footer from './components/Footer';
 import './App.css';
 
@@ -22,8 +24,9 @@ function App() {
   console.log('API URL:', process.env.REACT_APP_API_URL);
 
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="App min-h-screen flex flex-col">
+        <Navigation />
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<LandingPage />} />
@@ -70,6 +73,7 @@ function App() {
           <Route path="/" element={null} />
           <Route path="*" element={<Footer />} />
         </Routes>
+        <QuickAccess />
         <Toaster position="top-right" />
       </div>
     </Router>

@@ -212,6 +212,20 @@ router.get("/metrics", authenticateAdmin, async (req, res) => {
   }
 });
 
+// GET /api/admin/lanes/impact - Get lanes with impact scores
+router.get("/lanes/impact", authenticateAdmin, async (req, res) => {
+  try {
+    const Lane = require("../models/Lane");
+    const lanes = await Lane.find().sort({ impactScore: -1 });
+
+    res.json({ lanes });
+
+  } catch (error) {
+    console.error("Error fetching lanes with impact scores:", error);
+    res.status(500).json({ error: "Failed to fetch lanes" });
+  }
+});
+
 // GET /api/admin/lanes - Get content lanes
 router.get("/lanes", authenticateAdmin, async (req, res) => {
   try {

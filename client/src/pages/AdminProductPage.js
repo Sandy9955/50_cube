@@ -573,10 +573,14 @@ export default function AdminProductPage() {
                   
                   <div className="flex justify-between items-center mb-3">
                     <span className="text-xl font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                    {product.rating && (
+                    {(product.rating?.average || product.rating) && (
                       <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium">{product.rating}</span>
-                        <span className="text-xs text-gray-500">({product.reviews})</span>
+                        <span className="text-sm font-medium">
+                          {product.rating?.average || product.rating}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          ({product.rating?.count || product.reviews || 0})
+                        </span>
                       </div>
                     )}
                   </div>

@@ -12,8 +12,7 @@ import {
 import MerchQuote from '../components/MerchQuote';
 import ProductDetail from '../components/ProductDetail';
 import { sampleProducts } from '../data/sampleProducts';
-import api from '../services/api';
-import { authService } from '../services/api';
+import api, { authService } from '../services/api';
 
 const Card = ({ children, className = "", ...props }) => (
   <div className={`bg-white rounded-lg shadow-md border border-gray-200 ${className}`} {...props}>
@@ -157,82 +156,158 @@ export default function MerchPage() {
     try {
       // Try to fetch from API first, fallback to sample data
       const response = await api.get('/merch/catalog');
-      setProducts(response.data.products);
+      if (response.data.products && response.data.products.length > 0) {
+        setProducts(response.data.products);
+      } else {
+        throw new Error('No products from API');
+      }
     } catch (error) {
       console.log("Using sample products data");
-      // Use enhanced sample data with better product information
+      // Use the comprehensive sample products with real images
       const enhancedSampleProducts = [
         {
           id: "1",
-          name: "50cube Logo T-Shirt",
-          description: "Premium cotton t-shirt with 50cube logo",
+          name: "50Cube Premium T-Shirt",
+          description: "Comfortable cotton t-shirt with 50Cube branding. Perfect for developers and tech enthusiasts.",
           price: 29.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop",
           category: "Apparel",
           rating: 4.5,
           reviews: 23,
           inStock: true,
-          features: ["Premium cotton", "50cube branding", "Comfortable fit"]
+          features: ["Premium cotton", "50Cube branding", "Comfortable fit", "Multiple sizes"]
         },
         {
           id: "2",
-          name: "Learning Champion Mug",
-          description: "Ceramic mug for your daily motivation",
+          name: "50Cube Coffee Mug",
+          description: "Ceramic coffee mug with 50Cube logo. Perfect for your morning coding sessions.",
           price: 19.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
           category: "Drinkware",
           rating: 4.8,
           reviews: 45,
           inStock: true,
-          features: ["350ml capacity", "Microwave safe", "Motivational design"]
+          features: ["350ml capacity", "Microwave safe", "50Cube branding", "Dishwasher safe"]
         },
         {
           id: "3",
-          name: "Premium Learning Hoodie",
-          description: "Comfortable hoodie for focused study sessions",
+          name: "50Cube Hoodie",
+          description: "Comfortable hoodie with 50Cube branding. Perfect for late-night coding sessions.",
           price: 59.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop",
           category: "Apparel",
           rating: 4.7,
           reviews: 18,
           inStock: true,
-          features: ["Fleece lining", "Kangaroo pocket", "Study comfort"]
+          features: ["Fleece lining", "Kangaroo pocket", "50Cube branding", "Comfortable fit"]
         },
         {
           id: "4",
-          name: "Knowledge Journal",
-          description: "High-quality notebook for taking notes",
+          name: "50Cube Notebook",
+          description: "High-quality notebook with 50Cube branding. Perfect for taking notes and sketching ideas.",
           price: 24.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=400&h=400&fit=crop",
           category: "Stationery",
           rating: 4.6,
           reviews: 32,
           inStock: true,
-          features: ["200 pages", "Premium paper", "Spiral binding"]
+          features: ["200 pages", "Premium paper", "50Cube branding", "Spiral binding"]
         },
         {
           id: "5",
-          name: "50cube Sticker Pack",
-          description: "Collection of motivational stickers",
+          name: "50Cube Sticker Pack",
+          description: "Collection of 50Cube branded stickers. Perfect for laptops, water bottles, and more.",
           price: 9.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop",
           category: "Accessories",
           rating: 4.4,
           reviews: 67,
           inStock: true,
-          features: ["10 stickers", "High quality vinyl", "Motivational quotes"]
+          features: ["10 stickers", "High quality vinyl", "50Cube branding", "Various designs"]
         },
         {
           id: "6",
-          name: "Study Companion Backpack",
-          description: "Durable backpack for students and learners",
+          name: "50Cube Backpack",
+          description: "Durable backpack with 50Cube branding. Perfect for carrying your laptop and essentials.",
           price: 79.99,
-          image: "/placeholder.svg",
+          image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
           category: "Bags",
           rating: 4.9,
           reviews: 28,
           inStock: true,
-          features: ["Laptop compartment", "Water resistant", "Ergonomic design"]
+          features: ["Laptop compartment", "Water resistant", "50Cube branding", "Ergonomic design"]
+        },
+        {
+          id: "7",
+          name: "50Cube Wireless Headphones",
+          description: "Premium noise-canceling headphones with 50Cube branding. Perfect for focused work sessions.",
+          price: 89.99,
+          image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.9,
+          reviews: 342,
+          inStock: true,
+          features: ["Noise cancellation", "30-hour battery", "50Cube branding", "Premium sound"]
+        },
+        {
+          id: "8",
+          name: "50Cube Mechanical Keyboard",
+          description: "RGB mechanical keyboard with 50Cube branding. Customizable backlighting and macro keys.",
+          price: 149.99,
+          image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.7,
+          reviews: 178,
+          inStock: true,
+          features: ["Cherry MX switches", "RGB backlighting", "50Cube branding", "Premium build"]
+        },
+        {
+          id: "9",
+          name: "50Cube Laptop Stand",
+          description: "Adjustable aluminum laptop stand with 50Cube branding. Ergonomic design for better posture.",
+          price: 39.99,
+          image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.6,
+          reviews: 198,
+          inStock: true,
+          features: ["Adjustable height", "Cooling vents", "50Cube branding", "Aluminum build"]
+        },
+        {
+          id: "10",
+          name: "50Cube Smart Watch",
+          description: "Fitness tracking smartwatch with 50Cube branding. Heart rate monitor, GPS, and 7-day battery life.",
+          price: 199.99,
+          image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.7,
+          reviews: 312,
+          inStock: true,
+          features: ["Heart rate monitor", "GPS tracking", "50Cube branding", "Water resistant"]
+        },
+        {
+          id: "11",
+          name: "50Cube Wireless Mouse",
+          description: "Ergonomic wireless mouse with 50Cube branding. Precision tracking and customizable buttons.",
+          price: 59.99,
+          image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.5,
+          reviews: 167,
+          inStock: true,
+          features: ["Ergonomic design", "Precision tracking", "50Cube branding", "Long battery"]
+        },
+        {
+          id: "12",
+          name: "50Cube Desk Lamp",
+          description: "LED desk lamp with 50Cube branding. Adjustable brightness and color temperature for optimal lighting.",
+          price: 44.99,
+          image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop",
+          category: "Electronics",
+          rating: 4.4,
+          reviews: 223,
+          inStock: true,
+          features: ["Adjustable brightness", "Color temperature", "50Cube branding", "Energy efficient"]
         }
       ];
       setProducts(enhancedSampleProducts);
@@ -422,11 +497,15 @@ export default function MerchPage() {
                 <CardHeader>
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant="secondary">{product.category}</Badge>
-                    {product.rating && (
+                    {(product.rating?.average || product.rating) && (
                       <div className="flex items-center gap-1">
                         <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
-                        <span className="text-sm font-medium">{product.rating}</span>
-                        <span className="text-xs text-gray-500">({product.reviews})</span>
+                        <span className="text-sm font-medium">
+                          {product.rating?.average || product.rating}
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          ({product.rating?.count || product.reviews || 0})
+                        </span>
                       </div>
                     )}
                   </div>

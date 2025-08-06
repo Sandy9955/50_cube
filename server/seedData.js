@@ -8,87 +8,24 @@ const MONGODB_URI = "mongodb+srv://sandip99721:<db_password>@cluster0.vhsl78l.mo
 
 const sampleProducts = [
   {
-    name: "Learning Planner",
-    description: "12-month academic planner with goal-setting pages, habit trackers, and weekly study schedules.",
-    price: 19.99,
-    category: "Stationery",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
-    features: [
-      "12-month planning",
-      "Goal-setting pages",
-      "Habit trackers",
-      "Weekly study schedules",
-      "Premium paper quality"
-    ],
-    specifications: {
-      "Pages": "240",
-      "Size": "A5",
-      "Binding": "Spiral",
-      "Paper": "80gsm"
-    },
-    shipping: {
-      weight: 0.5,
-      dimensions: {
-        length: 21,
-        width: 15,
-        height: 2
-      }
-    },
-    tags: ["planner", "academic", "study", "organization"],
-    inStock: true,
-    inventory: 50
-  },
-  {
-    name: "Premium Coffee Mug",
-    description: "High-quality ceramic coffee mug with the 50cube logo. Perfect for your morning brew.",
-    price: 12.99,
-    category: "Drinkware",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
-    features: [
-      "350ml capacity",
-      "Microwave safe",
-      "Dishwasher safe",
-      "Premium ceramic",
-      "50cube branding"
-    ],
-    specifications: {
-      "Capacity": "350ml",
-      "Material": "Ceramic",
-      "Height": "12cm",
-      "Diameter": "8cm"
-    },
-    shipping: {
-      weight: 0.3,
-      dimensions: {
-        length: 12,
-        width: 8,
-        height: 8
-      }
-    },
-    tags: ["coffee", "mug", "drinkware", "ceramic"],
-    inStock: true,
-    inventory: 100
-  },
-  {
-    name: "Tech T-Shirt",
-    description: "Comfortable cotton t-shirt with a modern tech design. Available in multiple sizes.",
-    price: 24.99,
+    name: "50Cube Premium T-Shirt",
+    description: "Comfortable cotton t-shirt with 50Cube branding. Perfect for developers and tech enthusiasts.",
+    price: 29.99,
     category: "Apparel",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
+    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop"],
     features: [
-      "100% cotton",
-      "Multiple sizes",
-      "Modern design",
+      "Premium cotton",
+      "50Cube branding",
       "Comfortable fit",
+      "Multiple sizes",
       "Machine washable"
     ],
     specifications: {
       "Material": "100% Cotton",
       "Fit": "Regular",
-      "Care": "Machine wash cold"
+      "Care": "Machine wash cold",
+      "Branding": "50Cube logo"
     },
     shipping: {
       weight: 0.2,
@@ -98,105 +35,375 @@ const sampleProducts = [
         height: 2
       }
     },
-    tags: ["t-shirt", "apparel", "cotton", "tech"],
+    tags: ["t-shirt", "apparel", "50cube", "cotton", "tech"],
+    inStock: true,
+    inventory: 100,
+    rating: {
+      average: 4.5,
+      count: 23
+    }
+  },
+  {
+    name: "50Cube Coffee Mug",
+    description: "Ceramic coffee mug with 50Cube logo. Perfect for your morning coding sessions.",
+    price: 19.99,
+    category: "Drinkware",
+    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop"],
+    features: [
+      "350ml capacity",
+      "Microwave safe",
+      "50Cube branding",
+      "Dishwasher safe",
+      "Premium ceramic"
+    ],
+    specifications: {
+      "Capacity": "350ml",
+      "Material": "Ceramic",
+      "Height": "12cm",
+      "Diameter": "8cm",
+      "Branding": "50Cube logo"
+    },
+    shipping: {
+      weight: 0.3,
+      dimensions: {
+        length: 12,
+        width: 8,
+        height: 8
+      }
+    },
+    tags: ["coffee", "mug", "drinkware", "50cube", "ceramic"],
+    inStock: true,
+    inventory: 150
+  },
+  {
+    name: "50Cube Hoodie",
+    description: "Comfortable hoodie with 50Cube branding. Perfect for late-night coding sessions.",
+    price: 59.99,
+    category: "Apparel",
+    image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop"],
+    features: [
+      "Fleece lining",
+      "Kangaroo pocket",
+      "50Cube branding",
+      "Comfortable fit",
+      "Machine washable"
+    ],
+    specifications: {
+      "Material": "Cotton/Polyester blend",
+      "Fit": "Regular",
+      "Care": "Machine wash cold",
+      "Branding": "50Cube logo"
+    },
+    shipping: {
+      weight: 0.5,
+      dimensions: {
+        length: 35,
+        width: 30,
+        height: 3
+      }
+    },
+    tags: ["hoodie", "apparel", "50cube", "fleece", "comfortable"],
     inStock: true,
     inventory: 75
   },
   {
-    name: "Wireless Earbuds",
-    description: "High-quality wireless earbuds with noise cancellation and long battery life.",
-    price: 89.99,
-    category: "Electronics",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
+    name: "50Cube Notebook",
+    description: "High-quality notebook with 50Cube branding. Perfect for taking notes and sketching ideas.",
+    price: 24.99,
+    category: "Stationery",
+    image: "https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1531346680769-a1d79b57de5c?w=400&h=400&fit=crop"],
     features: [
-      "Active noise cancellation",
-      "20-hour battery life",
-      "Bluetooth 5.0",
-      "Water resistant",
-      "Touch controls"
+      "200 pages",
+      "Premium paper",
+      "50Cube branding",
+      "Spiral binding",
+      "A5 size"
     ],
     specifications: {
-      "Battery": "20 hours",
-      "Connectivity": "Bluetooth 5.0",
-      "Water Resistance": "IPX4",
-      "Charging": "USB-C"
-    },
-    shipping: {
-      weight: 0.1,
-      dimensions: {
-        length: 8,
-        width: 6,
-        height: 3
-      }
-    },
-    tags: ["earbuds", "wireless", "audio", "bluetooth"],
-    inStock: true,
-    inventory: 30
-  },
-  {
-    name: "Laptop Sleeve",
-    description: "Protective laptop sleeve with padding and water-resistant exterior.",
-    price: 34.99,
-    category: "Bags",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
-    features: [
-      "Water-resistant exterior",
-      "Padded interior",
-      "Multiple laptop sizes",
-      "Lightweight design",
-      "Zipper closure"
-    ],
-    specifications: {
-      "Material": "Neoprene",
-      "Sizes": "13\", 15\", 17\"",
-      "Weight": "200g",
-      "Water Resistance": "Splash proof"
+      "Pages": "200",
+      "Size": "A5",
+      "Binding": "Spiral",
+      "Paper": "80gsm",
+      "Branding": "50Cube logo"
     },
     shipping: {
       weight: 0.4,
       dimensions: {
-        length: 40,
-        width: 30,
-        height: 5
+        length: 21,
+        width: 15,
+        height: 2
       }
     },
-    tags: ["laptop", "sleeve", "protection", "neoprene"],
+    tags: ["notebook", "stationery", "50cube", "paper", "notes"],
     inStock: true,
-    inventory: 40
+    inventory: 200
   },
   {
-    name: "Desk Organizer",
-    description: "Multi-compartment desk organizer to keep your workspace tidy and organized.",
-    price: 29.99,
+    name: "50Cube Sticker Pack",
+    description: "Collection of 50Cube branded stickers. Perfect for laptops, water bottles, and more.",
+    price: 9.99,
     category: "Accessories",
-    image: "/placeholder.svg",
-    images: ["/placeholder.svg"],
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop"],
     features: [
-      "Multiple compartments",
-      "Stable base",
-      "Easy assembly",
-      "Modern design",
-      "Space efficient"
+      "10 stickers",
+      "High quality vinyl",
+      "50Cube branding",
+      "Various designs",
+      "Weather resistant"
     ],
     specifications: {
-      "Material": "Plastic",
-      "Dimensions": "25x15x10cm",
-      "Compartments": "6",
-      "Assembly": "No tools required"
+      "Quantity": "10 stickers",
+      "Material": "Vinyl",
+      "Size": "Various",
+      "Branding": "50Cube designs",
+      "Durability": "Weather resistant"
+    },
+    shipping: {
+      weight: 0.1,
+      dimensions: {
+        length: 15,
+        width: 10,
+        height: 1
+      }
+    },
+    tags: ["stickers", "accessories", "50cube", "vinyl", "decals"],
+    inStock: true,
+    inventory: 300
+  },
+  {
+    name: "50Cube Backpack",
+    description: "Durable backpack with 50Cube branding. Perfect for carrying your laptop and essentials.",
+    price: 79.99,
+    category: "Bags",
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop"],
+    features: [
+      "Laptop compartment",
+      "Water resistant",
+      "50Cube branding",
+      "Ergonomic design",
+      "Multiple pockets"
+    ],
+    specifications: {
+      "Material": "Nylon",
+      "Capacity": "25L",
+      "Laptop": "Up to 15\"",
+      "Branding": "50Cube logo",
+      "Water Resistance": "Water repellent"
     },
     shipping: {
       weight: 0.8,
       dimensions: {
-        length: 25,
-        width: 15,
-        height: 10
+        length: 45,
+        width: 35,
+        height: 15
       }
     },
-    tags: ["desk", "organizer", "storage", "office"],
+    tags: ["backpack", "bags", "50cube", "laptop", "travel"],
+    inStock: true,
+    inventory: 50
+  },
+  {
+    name: "50Cube Wireless Headphones",
+    description: "Premium noise-canceling headphones with 50Cube branding. Perfect for focused work sessions.",
+    price: 89.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop"],
+    features: [
+      "Noise cancellation",
+      "30-hour battery",
+      "50Cube branding",
+      "Premium sound",
+      "Bluetooth 5.0"
+    ],
+    specifications: {
+      "Battery": "30 hours",
+      "Connectivity": "Bluetooth 5.0",
+      "Noise Cancellation": "Active",
+      "Branding": "50Cube logo",
+      "Charging": "USB-C"
+    },
+    shipping: {
+      weight: 0.3,
+      dimensions: {
+        length: 20,
+        width: 18,
+        height: 8
+      }
+    },
+    tags: ["headphones", "electronics", "50cube", "wireless", "audio"],
+    inStock: true,
+    inventory: 40
+  },
+  {
+    name: "50Cube Mechanical Keyboard",
+    description: "RGB mechanical keyboard with 50Cube branding. Customizable backlighting and macro keys.",
+    price: 149.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=400&h=400&fit=crop"],
+    features: [
+      "Cherry MX switches",
+      "RGB backlighting",
+      "50Cube branding",
+      "Premium build",
+      "Macro keys"
+    ],
+    specifications: {
+      "Switches": "Cherry MX",
+      "Backlighting": "RGB",
+      "Layout": "Full size",
+      "Branding": "50Cube logo",
+      "Connectivity": "USB-C"
+    },
+    shipping: {
+      weight: 1.2,
+      dimensions: {
+        length: 45,
+        width: 15,
+        height: 3
+      }
+    },
+    tags: ["keyboard", "electronics", "50cube", "mechanical", "rgb"],
+    inStock: true,
+    inventory: 30
+  },
+  {
+    name: "50Cube Laptop Stand",
+    description: "Adjustable aluminum laptop stand with 50Cube branding. Ergonomic design for better posture.",
+    price: 39.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&h=400&fit=crop"],
+    features: [
+      "Adjustable height",
+      "Cooling vents",
+      "50Cube branding",
+      "Aluminum build",
+      "Ergonomic design"
+    ],
+    specifications: {
+      "Material": "Aluminum",
+      "Height": "Adjustable",
+      "Weight": "800g",
+      "Branding": "50Cube logo",
+      "Laptop Size": "Up to 17\""
+    },
+    shipping: {
+      weight: 0.8,
+      dimensions: {
+        length: 35,
+        width: 25,
+        height: 5
+      }
+    },
+    tags: ["laptop stand", "electronics", "50cube", "ergonomic", "aluminum"],
+    inStock: true,
+    inventory: 80
+  },
+  {
+    name: "50Cube Smart Watch",
+    description: "Fitness tracking smartwatch with 50Cube branding. Heart rate monitor, GPS, and 7-day battery life.",
+    price: 199.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop"],
+    features: [
+      "Heart rate monitor",
+      "GPS tracking",
+      "50Cube branding",
+      "Water resistant",
+      "7-day battery"
+    ],
+    specifications: {
+      "Battery": "7 days",
+      "Water Resistance": "5ATM",
+      "GPS": "Built-in",
+      "Branding": "50Cube logo",
+      "Display": "AMOLED"
+    },
+    shipping: {
+      weight: 0.2,
+      dimensions: {
+        length: 10,
+        width: 8,
+        height: 2
+      }
+    },
+    tags: ["smartwatch", "electronics", "50cube", "fitness", "gps"],
+    inStock: true,
+    inventory: 25
+  },
+  {
+    name: "50Cube Wireless Mouse",
+    description: "Ergonomic wireless mouse with 50Cube branding. Precision tracking and customizable buttons.",
+    price: 59.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=400&fit=crop"],
+    features: [
+      "Ergonomic design",
+      "Precision tracking",
+      "50Cube branding",
+      "Long battery",
+      "Customizable buttons"
+    ],
+    specifications: {
+      "DPI": "Up to 12000",
+      "Battery": "6 months",
+      "Connectivity": "2.4GHz",
+      "Branding": "50Cube logo",
+      "Buttons": "6 programmable"
+    },
+    shipping: {
+      weight: 0.1,
+      dimensions: {
+        length: 12,
+        width: 8,
+        height: 4
+      }
+    },
+    tags: ["mouse", "electronics", "50cube", "wireless", "ergonomic"],
     inStock: true,
     inventory: 60
+  },
+  {
+    name: "50Cube Desk Lamp",
+    description: "LED desk lamp with 50Cube branding. Adjustable brightness and color temperature for optimal lighting.",
+    price: 44.99,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop",
+    images: ["https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop"],
+    features: [
+      "Adjustable brightness",
+      "Color temperature",
+      "50Cube branding",
+      "Energy efficient",
+      "Touch controls"
+    ],
+    specifications: {
+      "Brightness": "Adjustable",
+      "Color Temperature": "2700K-6500K",
+      "Power": "LED",
+      "Branding": "50Cube logo",
+      "Controls": "Touch"
+    },
+    shipping: {
+      weight: 0.6,
+      dimensions: {
+        length: 30,
+        width: 20,
+        height: 8
+      }
+    },
+    tags: ["desk lamp", "electronics", "50cube", "led", "lighting"],
+    inStock: true,
+    inventory: 70
   }
 ];
 
